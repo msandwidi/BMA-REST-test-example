@@ -10,7 +10,7 @@ var resultsRouter = require('./routes/results');
 
 var app = express();
 
-app.set('port', process.env.PORT || '3000')
+//app.set('port', process.env.PORT || '3000')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -44,8 +44,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(app.get('port'), function(){
-  console.log('Express (app.js) server listening on port '+ app.get('port'));
-})
-
-//module.exports = app;
+module.exports = app;

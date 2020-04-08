@@ -4,27 +4,22 @@ var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
 const url = config.url;
 const db = config.db;
-const collection = config.collection;
+var collection = config.collection;
 var dbconnection = null;
-
-    MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, function(err, client) {
-        assert.equal(err, null);
-        dbconnection = client.db(db);
-    });
-
+const mongoose = require('mongoose');
+const PertinentResult = require('../models/pertinentResultModel');
 
     var insertDoc = async function(req, res) {
-        await dbconnection.collection(collection).insertOne( 
-            req.body, 
-            function(err, result) {
-                assert.equal(err, null);
-                console.log("Inserted a document into the results collection.");
-                res.json(result).end();
-            }
-        );
+        const new_pr = new PertinentResult(req.body);
+        new_pr
+        .save()
+        .then(result => {
+            res.json(result);
+        })
     };
     
     var findDoc = async function(req, res) {
+
         var companyid = req.params.companyid;
         var query = null; 
         if(companyid == "all" || companyid == "count"){
@@ -32,24 +27,27 @@ var dbconnection = null;
         }else{
             query = {"company_id": companyid};
         }
-        console.log(companyid);
-        await dbconnection
-        .collection(collection)
-        .find(query)//search here
-        .toArray()
-        .then( data => {
+
+        PertinentResult
+        .find(query)
+        .exec()
+        .then(data => {
             if(companyid == "count"){
                 var numRecords = 0;
                 data.forEach(element => {
-                    numRecords++
+                    numRecords++;
                 });
-                res.json({"number_of_records": numRecords});
+                res.json({"number_of_records": numRecords})
             }else{
-                res.json(data);
+                if(data != []){
+                    res.json(data);
+                }else{
+                    res.json({"number_of_records": "company id did not match any records."});
+                }
             }
-        }).catch( err => {
+        }).catch(err => {
             console.log(err);
-        });
+        })
     };
     
     var updateDoc = async function(req, res) {

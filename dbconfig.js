@@ -9,7 +9,8 @@ module.exports = {
 
 // mongo db atlas
 module.exports = {
-    "url": "mongodb+srv://4Play:Scsu1301!@4playcluster-0s1tb.gcp.mongodb.net/test?retryWrites=true&w=majority",
+    "url": "mongodb+srv://4Play:Scsu1301!@4playcluster-0s1tb.gcp.mongodb.net/bma?retryWrites=true&w=majority",
     "db": "bma",
-    "collection": "results"
+    "collection": "results",
+    "qa-collection": "results-qa"
 }
